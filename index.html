@@ -179,7 +179,7 @@
         <img src="./logo.jpg" alt="薗英則 サイン・ロゴ" onerror="this.style.display='none'">
     </div>
 
-    <h1>風景写真用過焦点距離チェッカー</h1>
+    <h1>被写界深度・過焦点距離チェッカー</h1>
     <p class="subtitle">風景写真作家 薗英則 公式ツール</p>
 
     <div class="form-group">
@@ -238,13 +238,9 @@ function calculate() {
         return;
     }
 
-    // 焦点距離をmmからmに換算して過焦点距離Hを計算 (H = f^2 / (F * c))
-    // f(mm), c(mm) のため、Hの単位は mm になる → 1000で割って m に変換
-    // H = (f * f) / (F * c) [mm] => / 1000 [m]
     const H_mm = (f * f) / (F * c);
     const H_m = H_mm / 1000;
 
-    // フォーマット関数（100m未満は小数1桁、100m以上は整数など、お好みで調整）
     const formatDist = (val) => {
         if (!isFinite(val) || val > 100000) return '無限遠 (∞)';
         if (val < 10) return val.toFixed(2) + ' m';
@@ -252,18 +248,9 @@ function calculate() {
         return Math.round(val) + ' m';
     };
 
-    // 過焦点距離の結果表示
     document.getElementById('hyperfocalResult').innerText = `過焦点距離 (H): ${formatDist(H_m)}`;
     document.getElementById('hyperfocalDesc').innerText = `この条件における基準の過焦点距離 H は約 ${formatDist(H_m)} です。`;
 
-    // 被写体距離 S に合わせた被写界深度（近点 Dn、遠点 Df）の計算
-    // Dn = (H * S) / (H + S) （ただし S >= H の場合は S = H として計算するか、一般的な公式適用）
-    // 一般的な公式:
-    // 近点 Dn = (H * S) / (H + (S - f)) ≈ (H * S) / (H + S)  (fがSに比べて十分小さい場合)
-    // 厳密な公式（レンズの主点等を考慮）または一般的な簡易公式:
-    // Dn = (H * S) / (H + S) （SがHに近い実用的な範囲）
-    // 遠点 Df = (H * S) / (H - S)  (S < H の場合)
-    
     let Dn = (H_m * S) / (H_m + S);
     let Df;
 
@@ -277,7 +264,6 @@ function calculate() {
     document.getElementById('nearPoint').innerText = `・手前 (近点) : ${formatDist(Dn)}`;
     document.getElementById('farPoint').innerText = `・奥 (遠点) : ${formatDist(Df)}`;
 
-    // 結果コンテナを表示
     document.getElementById('resultContainer').style.display = 'block';
 }
 </script>

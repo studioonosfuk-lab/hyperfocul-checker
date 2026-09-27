@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>風景写真用 過焦点距離チェッカー by 薗英則</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 1.2rem;
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            font-size: 0.85rem;
+            text-align: center;
+            color: #888;
+            margin-bottom: 25px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: #ccc;
+        }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #007acc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #005999;
+        }
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #252525;
+            border-left: 4px solid #007acc;
+            border-radius: 4px;
+            display: none;
+        }
+        .result-title {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        .result-desc {
+            font-size: 0.85rem;
+            color: #ccc;
+            line-height: 1.5;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>風景写真用 過焦点距離チェッカー</h1>
+    <div class="subtitle">風景写真作家 薗英則 公式ツール</div>
+
+    <div class="card">
+        <div class="form-group">
+            <label for="sensor">カメラのセンサーサイズ</label>
+            <select id="sensor">
+                <option value="0.030">35mmフルサイズ (許容錯乱円 0.03mm)</option>
+                <option value="0.020">APS-C (許容錯乱円 0.02mm)</option>
+                <option value="0.015">マイクロフォーサーズ (許容錯乱円 0.015mm)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="focalLength">レンズの焦点距離 (mm)</label>
+            <input type="number" id="focalLength" value="24" min="1" max="1000">
+        </div>
+
+        <div class="form-group">
+            <label for="fNumber">F値 (絞り)</label>
+            <input type="number" id="fNumber" value="8" step="0.1" min="1" max="64">
+        </div>
+
+        <button onclick="calculateHyperfocal()">計算する</button>
+
+        <div class="result-box" id="resultArea">
+            <div class="result-title">推奨するピント位置（過焦点距離）</div>
+            <div class="result-value" id="resultValue">0.0 m</div>
+            <div class="result-desc" id="resultDesc"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; Hidenori Sono / ワクワク写真生活
+    </div>
+
+    <script>
+        function calculateHyperfocal() {
+            const delta = parseFloat(document.getElementById('sensor').value);
+            const f = parseFloat(document.getElementById('focalLength').value);
+            const F = parseFloat(document.getElementById('fNumber').value);
+
+            if (isNaN(f) || isNaN(F) || f <= 0 || F <= 0) {
+                alert('正しい数値を入力してください。');
+                return;
+            }
+
+            // 過焦点距離の計算 (H = f^2 / (F * delta)) [mm単位で計算してメートルに変換]
+            // f: mm, F: 0, delta: mm -> H (mm) = (f * f) / (F * delta)
+            const hMm = (f * f) / (F * delta);
+            const hM = hMm / 1000;
+
+            const resultValue = document.getElementById('resultValue');
+            const resultDesc = document.getElementById('resultDesc');
+            const resultArea = document.getElementById('resultArea');
+
+            let displayStr = '';
+            if (hM < 1) {
+                displayStr = (hM * 100).toFixed(1) + ' cm';
+            } else {
+                displayStr = hM.toFixed(2) + ' m';
+            }
+
+            resultValue.innerText = displayStr;
+            resultDesc.innerHTML = `この条件では、<strong>約 ${displayStr} 先</strong>にピントを合わせることで、その半分の距離（約 ${(hM/2).toFixed(2)}m）から無限遠（奥の山など）までシャープにピントが合います！`;
+            
+            resultArea.style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>

@@ -126,7 +126,7 @@
 
     <div class="card">
         <div class="form-group">
-            <label for="sensor">カメラのセンサーサイズ (許容錯乱円 $c$)</label>
+            <label for="sensor">カメラのセンサーサイズ (許容錯乱円 c)</label>
             <select id="sensor">
                 <option value="0.030">35mmフルサイズ (0.03 mm)</option>
                 <option value="0.020">APS-C (0.02 mm)</option>
@@ -135,17 +135,17 @@
         </div>
 
         <div class="form-group">
-            <label for="focalLength">レンズの焦点距離 $f$ (mm)</label>
+            <label for="focalLength">レンズの焦点距離 f (mm)</label>
             <input type="number" id="focalLength" value="200" min="1" max="1000">
         </div>
 
         <div class="form-group">
-            <label for="fNumber">F値 (絞り) $F$</label>
+            <label for="fNumber">F値 (絞り) F</label>
             <input type="number" id="fNumber" value="11" step="0.1" min="1" max="64">
         </div>
 
         <div class="form-group">
-            <label for="focusDistance">被写体・ピント位置の距離 $S$ (m)</label>
+            <label for="focusDistance">被写体・ピント位置の距離 S (m)</label>
             <input type="number" id="focusDistance" value="121" step="0.1" min="0.1" max="10000">
         </div>
 
@@ -166,7 +166,7 @@
     <script>
         function formatDistance(meters) {
             if (isNaN(meters) || !isFinite(meters) || meters > 99999) {
-                return "無限遠 (\\(\\infty\\))";
+                return "無限遠 (∞)";
             }
             if (meters < 1) {
                 return (meters * 100).toFixed(1) + ' cm';
@@ -189,7 +189,6 @@
             }
 
             // 過焦点距離 H (mm単位からメートルに変換)
-            // H = f^2 / (F * delta)
             const hMm = (f * f) / (F * delta);
             const hM = hMm / 1000;
 
@@ -211,17 +210,11 @@
             const resultArea = document.getElementById('resultArea');
 
             resultValue.innerText = `過焦点距離 (H): ${formatDistance(hM)}`;
-            resultDesc.innerHTML = `この条件における基準の過焦点距離 $H$ は <strong>約 ${formatDistance(hM)}</strong> です。`;
+            resultDesc.innerHTML = `この条件における基準の過焦点距離 H は <strong>約 ${formatDistance(hM)}</strong> です。`;
 
             let depthText = `<strong>【ピント位置：${formatDistance(S)} の場合の被写界深度】</strong><br>`;
             depthText += `・手前（近点）: <strong>${formatDistance(Dn)}</strong><br>`;
             depthText += `・奥（遠点）: <strong>${formatDistance(Df)}</strong>`;
-
-            if (Math.abs(S - hM) < 1.0) {
-                depthText += `<br><span style="color: #4da6ff;">💡 過焦点距離ピッタリに合わせたため、遠点は無限遠、近点は約 ${formatDistance(hM / 2)} になります！</span>`;
-            } else if (S < hM) {
-                depthText += `<br><span style="color: #4da6ff;">💡 ピントを手前に置いたことで、近点・遠点ともに手前に引き寄った連続被写界深度（パンフォーカス）になります。</span>`;
-            }
 
             depthResult.innerHTML = depthText;
             resultArea.style.display = 'block';

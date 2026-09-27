@@ -3,222 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>風景写真用 過焦点距離チェッカー by 薗英則</title>
+    <title>風景写真用過焦点距離チェッカー</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
+        :root {
+            --primary-color: #0066cc;
+            --primary-hover: #0052a3;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border-color: #333333;
+            --input-bg: #2a2a2a;
         }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            box-sizing: border-box;
+        }
+
         .logo-container {
             text-align: center;
             margin-bottom: 15px;
         }
+
         .logo-container img {
             max-height: 70px;
             width: auto;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #555;
         }
+
         h1 {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             text-align: center;
+            margin: 0 0 5px 0;
             color: #ffffff;
-            margin-bottom: 5px;
+            font-weight: 700;
         }
+
         .subtitle {
             font-size: 0.85rem;
             text-align: center;
-            color: #888;
-            margin-bottom: 25px;
+            color: var(--text-muted);
+            margin: 0 0 24px 0;
         }
-        .card {
-            background-color: #1e1e1e;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
+
         label {
             display: block;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-            color: #ccc;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            color: var(--text-color);
         }
+
         select, input {
             width: 100%;
             padding: 12px;
-            background-color: #2a2a2a;
-            border: 1px solid #444;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            color: #fff;
+            color: #ffffff;
             font-size: 1rem;
             box-sizing: border-box;
+            transition: border-color 0.2s;
         }
-        button {
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn-calculate {
             width: 100%;
             padding: 14px;
-            background-color: #007acc;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            margin-top: 10px;
+            transition: background-color 0.2s;
         }
-        button:hover {
-            background-color: #005999;
+
+        .btn-calculate:hover {
+            background-color: var(--primary-hover);
         }
-        .result-box {
-            margin-top: 25px;
-            padding: 20px;
-            background-color: #252525;
-            border-left: 4px solid #007acc;
-            border-radius: 4px;
+
+        .result-container {
+            margin-top: 24px;
+            padding: 16px;
+            background-color: #171717;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 0 8px 8px 0;
             display: none;
         }
+
         .result-title {
-            font-size: 0.85rem;
-            color: #aaa;
-            margin-bottom: 5px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
         }
-        .result-value {
-            font-size: 1.3rem;
-            font-weight: bold;
+
+        .result-main {
+            font-size: 1.4rem;
+            font-weight: 700;
             color: #ffffff;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
+
         .result-desc {
             font-size: 0.85rem;
-            color: #ccc;
-            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            line-height: 1.4;
         }
-        .sub-result {
-            margin-top: 12px;
+
+        .sub-result-box {
+            border-top: 1px dashed var(--border-color);
             padding-top: 12px;
-            border-top: 1px dashed #444;
-            font-size: 0.85rem;
-            color: #bbb;
+            margin-top: 12px;
         }
+
+        .sub-result-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .sub-result-item {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            margin-bottom: 4px;
+        }
+
         .footer {
             text-align: center;
             font-size: 0.75rem;
-            color: #666;
-            margin-top: 30px;
+            color: var(--text-muted);
+            margin-top: 24px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
         }
     </style>
 </head>
 <body>
 
+<div class="container">
+    <!-- ロゴ画像 -->
     <div class="logo-container">
-        <img src="./logo.jpg" alt="薗英則 サイン・ロゴ">
+        <img src="./logo.jpg" alt="薗英則 サイン・ロゴ" onerror="this.style.display='none'">
     </div>
 
-    <h1>風景写真用 過焦点距離チェッカー</h1>
-    <div class="subtitle">風景写真作家 薗英則 公式ツール</div>
+    <h1>風景写真用過焦点距離チェッカー</h1>
+    <p class="subtitle">風景写真作家 薗英則 公式ツール</p>
 
-    <div class="card">
-        <div class="form-group">
-            <label for="sensor">カメラのセンサーサイズ (許容錯乱円 c)</label>
-            <select id="sensor">
-                <option value="0.030">35mmフルサイズ (0.03 mm)</option>
-                <option value="0.020">APS-C (0.02 mm)</option>
-                <option value="0.015">マイクロフォーサーズ (0.015 mm)</option>
-            </select>
-        </div>
+    <div class="form-group">
+        <label for="sensor">カメラのセンサーサイズ (許容錯乱円 c)</label>
+        <select id="sensor">
+            <option value="0.030">35mmフルサイズ (0.03 mm)</option>
+            <option value="0.019">APS-C [Nikon/Sony/Fuji] (0.019 mm)</option>
+            <option value="0.020">APS-C [Canon] (0.02 mm)</option>
+            <option value="0.015">マイクロフォーサーズ (0.015 mm)</option>
+        </select>
+    </div>
 
-        <div class="form-group">
-            <label for="focalLength">レンズの焦点距離 f (mm)</label>
-            <input type="number" id="focalLength" value="200" min="1" max="1000">
-        </div>
+    <div class="form-group">
+        <label for="focalLength">レンズの焦点距離 f (mm)</label>
+        <input type="number" id="focalLength" value="200" step="1" min="1">
+    </div>
 
-        <div class="form-group">
-            <label for="fNumber">F値 (絞り) F</label>
-            <input type="number" id="fNumber" value="11" step="0.1" min="1" max="64">
-        </div>
+    <div class="form-group">
+        <label for="aperture">F値 (絞り) F</label>
+        <input type="number" id="aperture" value="11" step="0.1" min="1">
+    </div>
 
-        <div class="form-group">
-            <label for="focusDistance">被写体・ピント位置の距離 S (m)</label>
-            <input type="number" id="focusDistance" value="121" step="0.1" min="0.1" max="10000">
-        </div>
+    <div class="form-group">
+        <label for="subjectDistance">被写体・ピント位置の距離 S (m)</label>
+        <input type="number" id="subjectDistance" value="30" step="0.1" min="0.1">
+    </div>
 
-        <button onclick="calculateHyperfocal()">計算する</button>
+    <button class="btn-calculate" onclick="calculate()">計算する</button>
 
-        <div class="result-box" id="resultArea">
-            <div class="result-title">計算結果</div>
-            <div class="result-value" id="resultValue">--</div>
-            <div class="result-desc" id="resultDesc"></div>
-            <div class="sub-result" id="depthResult"></div>
+    <div id="resultContainer" class="result-container">
+        <div class="result-title">計算結果</div>
+        <div class="result-main" id="hyperfocalResult">過焦点距離 (H): --</div>
+        <div class="result-desc" id="hyperfocalDesc">--</div>
+        
+        <div class="sub-result-box">
+            <div class="sub-result-title" id="subResultTitle">【ピント位置に応じた被写界深度】</div>
+            <div class="sub-result-item" id="nearPoint">・手前 (近点) : --</div>
+            <div class="sub-result-item" id="farPoint">・奥 (遠点) : --</div>
         </div>
     </div>
 
     <div class="footer">
-        &copy; Hidenori Sono / ワクワク写真生活
+        © Hidenori Sono / ワクワク写真生活
     </div>
+</div>
 
-    <script>
-        function formatDistance(meters) {
-            if (isNaN(meters) || !isFinite(meters) || meters > 99999) {
-                return "無限遠 (∞)";
-            }
-            if (meters < 1) {
-                return (meters * 100).toFixed(1) + ' cm';
-            } else if (meters < 10) {
-                return meters.toFixed(2) + ' m';
-            } else {
-                return meters.toFixed(1) + ' m';
-            }
-        }
+<script>
+function calculate() {
+    const c = parseFloat(document.getElementById('sensor').value);
+    const f = parseFloat(document.getElementById('focalLength').value);
+    const F = parseFloat(document.getElementById('aperture').value);
+    const S = parseFloat(document.getElementById('subjectDistance').value);
 
-        function calculateHyperfocal() {
-            const delta = parseFloat(document.getElementById('sensor').value);
-            const f = parseFloat(document.getElementById('focalLength').value);
-            const F = parseFloat(document.getElementById('fNumber').value);
-            const S_input = parseFloat(document.getElementById('focusDistance').value);
+    if (isNaN(c) || isNaN(f) || isNaN(F) || isNaN(S) || f <= 0 || F <= 0 || S <= 0) {
+        alert('正しい数値を入力してください。');
+        return;
+    }
 
-            if (isNaN(f) || isNaN(F) || f <= 0 || F <= 0 || isNaN(S_input) || S_input <= 0) {
-                alert('正しい数値を入力してください。');
-                return;
-            }
+    // 焦点距離をmmからmに換算して過焦点距離Hを計算 (H = f^2 / (F * c))
+    // f(mm), c(mm) のため、Hの単位は mm になる → 1000で割って m に変換
+    // H = (f * f) / (F * c) [mm] => / 1000 [m]
+    const H_mm = (f * f) / (F * c);
+    const H_m = H_mm / 1000;
 
-            // 過焦点距離 H (mm単位からメートルに変換)
-            const hMm = (f * f) / (F * delta);
-            const hM = hMm / 1000;
+    // フォーマット関数（100m未満は小数1桁、100m以上は整数など、お好みで調整）
+    const formatDist = (val) => {
+        if (!isFinite(val) || val > 100000) return '無限遠 (∞)';
+        if (val < 10) return val.toFixed(2) + ' m';
+        if (val < 100) return val.toFixed(1) + ' m';
+        return Math.round(val) + ' m';
+    };
 
-            const S = S_input; // ピント位置 (m)
+    // 過焦点距離の結果表示
+    document.getElementById('hyperfocalResult').innerText = `過焦点距離 (H): ${formatDist(H_m)}`;
+    document.getElementById('hyperfocalDesc').innerText = `この条件における基準の過焦点距離 H は約 ${formatDist(H_m)} です。`;
 
-            // 連続被写界深度の計算（前方限界 Dn、後方限界 Df）
-            let Dn = (hM * S) / (hM + S);
-            let Df;
+    // 被写体距離 S に合わせた被写界深度（近点 Dn、遠点 Df）の計算
+    // Dn = (H * S) / (H + S) （ただし S >= H の場合は S = H として計算するか、一般的な公式適用）
+    // 一般的な公式:
+    // 近点 Dn = (H * S) / (H + (S - f)) ≈ (H * S) / (H + S)  (fがSに比べて十分小さい場合)
+    // 厳密な公式（レンズの主点等を考慮）または一般的な簡易公式:
+    // Dn = (H * S) / (H + S) （SがHに近い実用的な範囲）
+    // 遠点 Df = (H * S) / (H - S)  (S < H の場合)
+    
+    let Dn = (H_m * S) / (H_m + S);
+    let Df;
 
-            if (S >= hM) {
-                Df = Infinity;
-            } else {
-                Df = (hM * S) / (hM - S);
-            }
+    if (S >= H_m) {
+        Df = Infinity;
+    } else {
+        Df = (H_m * S) / (H_m - S);
+    }
 
-            const resultValue = document.getElementById('resultValue');
-            const resultDesc = document.getElementById('resultDesc');
-            const depthResult = document.getElementById('depthResult');
-            const resultArea = document.getElementById('resultArea');
+    document.getElementById('subResultTitle').innerText = `【ピント位置 : ${formatDist(S)} の場合の被写界深度】`;
+    document.getElementById('nearPoint').innerText = `・手前 (近点) : ${formatDist(Dn)}`;
+    document.getElementById('farPoint').innerText = `・奥 (遠点) : ${formatDist(Df)}`;
 
-            resultValue.innerText = `過焦点距離 (H): ${formatDistance(hM)}`;
-            resultDesc.innerHTML = `この条件における基準の過焦点距離 H は <strong>約 ${formatDistance(hM)}</strong> です。`;
+    // 結果コンテナを表示
+    document.getElementById('resultContainer').style.display = 'block';
+}
+</script>
 
-            let depthText = `<strong>【ピント位置：${formatDistance(S)} の場合の被写界深度】</strong><br>`;
-            depthText += `・手前（近点）: <strong>${formatDistance(Dn)}</strong><br>`;
-            depthText += `・奥（遠点）: <strong>${formatDistance(Df)}</strong>`;
-
-            depthResult.innerHTML = depthText;
-            resultArea.style.display = 'block';
-        }
-    </script>
 </body>
 </html>

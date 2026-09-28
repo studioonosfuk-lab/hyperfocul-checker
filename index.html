@@ -51,12 +51,12 @@
         }
 
         h1 {
-            font-size: 1.25rem; /* スマホで綺麗に収まるよう微調整 */
+            font-size: 1.2rem;
             text-align: center;
             margin: 0 0 5px 0;
             color: #ffffff;
             font-weight: 700;
-            white-space: nowrap; /* 途中で勝手に改行されないように指定 */
+            white-space: nowrap;
         }
 
         .subtitle {
@@ -168,16 +168,28 @@
             color: var(--text-muted);
             margin-top: 24px;
             border-top: 1px solid var(--border-color);
-            padding-top: 12px;
+            padding-top: 16px;
+        }
+
+        .footer-signature {
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .footer-signature img {
+            max-width: 180px;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- ロゴ画像 -->
+    <!-- ヘッダー：スタジオ オーノス ロゴ -->
     <div class="logo-container">
-        <img src="./logo.jpg" alt="薗英則 サイン・ロゴ" onerror="this.style.display='none'">
+        <img src="./logo.jpg" alt="スタジオ オーノス" onerror="this.style.display='none'">
     </div>
 
     <h1>被写界深度・過焦点距離チェッカー</h1>
@@ -224,6 +236,9 @@
 
     <div class="footer">
         © Hidenori Sono / ワクワク写真生活
+        <div class="footer-signature">
+            <img src="./Hidenori-Sono--Master-Files-Pack-mini-white.png" alt="Hidenori Sono PHOTOGRAPHER" onerror="this.style.display='none'">
+        </div>
     </div>
 </div>
 
@@ -271,3 +286,6 @@ function calculate() {
 
 </body>
 </html>
+```[cite: 2, 4]
+
+もしこれでもコピーが難しい場合は、どの部分（上部や下部など）をコピーしたいかお知らせいただければ、分割してご案内いたします！
